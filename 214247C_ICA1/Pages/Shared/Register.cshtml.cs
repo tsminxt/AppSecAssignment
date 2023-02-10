@@ -40,7 +40,9 @@ namespace _214247C_ICA1.Pages.Shared
         {
         }
 
-        //async - dnt need to wait for the request to come; is like a handphne [both sides]
+        //async - dnt need to wait for the request to come; is like a handphne [both sides]\
+
+        //saves data into the database
         public async Task<IActionResult> OnPost()
         {
             if (ModelState.IsValid)
@@ -71,22 +73,22 @@ namespace _214247C_ICA1.Pages.Shared
                         WhoamI = RModel.WhoamI,
                     };
                     ////Create the Admin role if NOT exist
-                    //// roleManager.FindByIdAsync("Admin") – attempts to search for the “Admin” role in AspNetRoles table.
-                    //IdentityRole role = await roleManager.FindByIdAsync("Admin");
-                    //if (role == null)
-                    //{
-                    //    // roleManager.CreateAsync(new IdentityRole("Admin") – Create a new “Admin” role and add into AspNetRoles table.
-                    //    IdentityResult result2 = await roleManager.CreateAsync(new IdentityRole("Admin"));
-                    //    if (!result2.Succeeded)
-                    //    {
-                    //        ModelState.AddModelError("", "Create role admin failed");
-                    //    }
-                    //}
+                    // roleManager.FindByIdAsync("Admin") – attempts to search for the “Admin” role in AspNetRoles table.
+                    IdentityRole role = await roleManager.FindByIdAsync("Admin");
+                    if (role == null)
+                    {
+                        // roleManager.CreateAsync(new IdentityRole("Admin") – Create a new “Admin” role and add into AspNetRoles table.
+                        IdentityResult result2 = await roleManager.CreateAsync(new IdentityRole("Admin"));
+                        if (!result2.Succeeded)
+                        {
+                            ModelState.AddModelError("", "Create role admin failed");
+                        }
+                    }
                     var result = await userManager.CreateAsync(user, RModel.Password);
                     if (result.Succeeded)
                     {
                         ////Add users to Admin Role
-                        //result = await userManager.AddToRoleAsync(user, "Admin");
+                        result = await userManager.AddToRoleAsync(user, "Admin");
 
                         await signInManager.SignInAsync(user, false);
                         return RedirectToPage("/Index");
